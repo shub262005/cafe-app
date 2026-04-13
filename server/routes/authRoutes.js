@@ -2,6 +2,7 @@ import express from 'express'
 import jwt from 'jsonwebtoken'
 import nodemailer from 'nodemailer'
 import User from '../models/User.js'
+import OtpModel from '../models/Otp.js'
 import { getNextTierInfo } from '../utils/loyaltyHelper.js'
 import dotenv from 'dotenv'
 dotenv.config()
@@ -18,8 +19,6 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-const otpCache = new Map();       // signup OTPs
-const adminOtpCache = new Map();  // admin login OTPs
 const JWT_SECRET = process.env.JWT_SECRET || 'cafe_mgmt_jwt_secret_2024'
 const JWT_EXPIRES_IN = '30d'
 
@@ -45,8 +44,8 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ message: 'Password must be at least 6 characters' })
         }
 
-        const cached = otpCache.get(email.toLowerCase());
-        if (!cached || cached.otp !== otp || cached.expiresAt < Date.now()) {
+        const cached = await OtpModel.findOne({ email: email.toLowerCase() }).sort({ createdAt: -1 })
+        if (!cached || cached.otp !== otp) {
             return res.status(400).json({ message: 'Invalid or expired OTP' })
         }
 
@@ -58,7 +57,7 @@ router.post('/register', async (req, res) => {
         const user = new User({ name, email, phone, address, password })
         const saved = await user.save()
 
-        otpCache.delete(email.toLowerCase()) // clear cache
+        await OtpModel.deleteMany({ email: email.toLowerCase() }) // clear cache
 
         const tierInfo = getNextTierInfo(saved.totalPointsEarned)
         const token = jwt.sign({ userId: saved._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN })
@@ -86,7 +85,7 @@ router.post('/send-otp', async (req, res) => {
         }
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString()
-        otpCache.set(email.toLowerCase(), { otp, expiresAt: Date.now() + 10 * 60 * 1000 })
+        await OtpModel.create({ email: email.toLowerCase(), otp })
 
         console.log("STEP 3: Sending mail...")
         await transporter.sendMail({
@@ -170,7 +169,7 @@ router.post('/admin-send-otp', async (req, res) => {
         }
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString()
-        adminOtpCache.set(email.toLowerCase(), { otp, expiresAt: Date.now() + 10 * 60 * 1000 })
+        await OtpModel.create({ email: email.toLowerCase(), otp })
 
         console.log("STEP 3: Sending mail...")
         await transporter.sendMail({
@@ -199,8 +198,8 @@ router.post('/admin-login', async (req, res) => {
             return res.status(400).json({ message: 'Email and OTP are required' })
         }
 
-        const cached = adminOtpCache.get(email.toLowerCase())
-        if (!cached || cached.otp !== otp || cached.expiresAt < Date.now()) {
+        const cached = await OtpModel.findOne({ email: email.toLowerCase() }).sort({ createdAt: -1 })
+        if (!cached || cached.otp !== otp) {
             return res.status(400).json({ message: 'Invalid or expired OTP' })
         }
 
@@ -209,7 +208,7 @@ router.post('/admin-login', async (req, res) => {
             return res.status(403).json({ message: 'Access denied.' })
         }
 
-        adminOtpCache.delete(email.toLowerCase())
+        await OtpModel.deleteMany({ email: email.toLowerCase() })
 
         const tierInfo = getNextTierInfo(user.totalPointsEarned)
         const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN })
