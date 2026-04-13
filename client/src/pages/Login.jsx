@@ -42,7 +42,7 @@ export default function Login() {
         if (!validateEmail(form.email)) { setError('Enter a valid email'); return }
         setLoading(true); setError('')
         try {
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/send-otp`, { email: form.email })
+            await axios.post(`/api/auth/send-otp`, { email: form.email })
             setOtpSent(true)
             alert('OTP sent to your email!')
         } catch (err) {
@@ -57,7 +57,7 @@ export default function Login() {
         setLoading(true); setError('')
         try {
             await axios.post(
-                `${import.meta.env.VITE_API_URL}/api/auth/admin-send-otp`,
+                `/api/auth/admin-send-otp`,
                 { email: form.email, password: form.password }
             )
             setAdminStep(2)
@@ -85,7 +85,7 @@ export default function Login() {
             } else {
                 // Admin Step 2: verify OTP
                 if (adminStep !== 2) { setError('Please complete Step 1 first'); setLoading(false); return }
-                const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/admin-login`, { email: form.email, otp: form.otp })
+                const { data } = await axios.post(`/api/auth/admin-login`, { email: form.email, otp: form.otp })
                 // persist via UserContext helper — borrow loginUser approach
                 const { persistSession } = {} // we'll call the exposed method below
                 // Manually persist since we have the response
