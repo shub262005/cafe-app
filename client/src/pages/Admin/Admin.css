@@ -1,0 +1,203 @@
+/* Admin Shared Styles */
+
+.admin-page {
+    width: 100%;
+}
+
+.admin-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.admin-page-header h2 {
+    font-size: var(--font-size-3xl);
+    color: var(--color-primary);
+}
+
+.admin-table-container {
+    overflow-x: auto;
+    padding: 0;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.admin-table th {
+    background: hsla(25, 95%, 53%, 0.05);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+.admin-table tr:hover {
+    background: hsla(0, 0%, 0%, 0.02);
+}
+
+.admin-img-thumb {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+}
+
+.text-small {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+}
+
+.status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+}
+
+.status-badge.success { background: #d4edda; color: #155724; }
+.status-badge.danger { background: #f8d7da; color: #721c24; }
+.status-badge.warning { background: #fff3cd; color: #856404; }
+.status-badge.info { background: #cce5ff; color: #004085; }
+
+.btn-icon {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    margin-right: var(--spacing-xs);
+    opacity: 0.7;
+    transition: opacity var(--transition-fast);
+}
+
+.btn-icon:hover { opacity: 1; }
+
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: var(--spacing-md);
+}
+
+.modal-content {
+    background: white;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-content h3 {
+    margin-bottom: var(--spacing-md);
+    color: var(--color-primary);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--spacing-xs);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-lg);
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--spacing-md);
+}
+
+/* ── Order Filter Tabs ────────────────────────────── */
+.orders-count {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+.order-filter-tabs {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+    margin-bottom: var(--spacing-lg);
+}
+
+.filter-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    border-radius: var(--radius-full);
+    border: 1.5px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    font-family: inherit;
+}
+
+.filter-tab:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: hsla(25, 95%, 53%, 0.06);
+}
+
+.filter-tab-count {
+    background: hsla(0, 0%, 50%, 0.12);
+    color: inherit;
+    border-radius: var(--radius-full);
+    padding: 0.05rem 0.45rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    min-width: 1.3rem;
+    text-align: center;
+}
+
+/* Active states per tab */
+.filter-tab.active {
+    border-color: var(--color-primary);
+    background: hsla(25, 95%, 53%, 0.1);
+    color: var(--color-primary);
+}
+
+.filter-tab-pending.active {
+    border-color: #d97706;
+    background: #fffbeb;
+    color: #92400e;
+}
+
+.filter-tab-pending.active .filter-tab-count {
+    background: #d97706;
+    color: #fff;
+}
+
+.filter-tab-confirmed.active {
+    border-color: #16a34a;
+    background: #f0fdf4;
+    color: #14532d;
+}
+
+.filter-tab-confirmed.active .filter-tab-count {
+    background: #16a34a;
+    color: #fff;
+}
+
+.filter-tab-cancelled.active {
+    border-color: #dc2626;
+    background: #fef2f2;
+    color: #7f1d1d;
+}
+
+.filter-tab-cancelled.active .filter-tab-count {
+    background: #dc2626;
+    color: #fff;
+}
+
