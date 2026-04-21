@@ -92,15 +92,11 @@ export default function Login() {
                 localStorage.setItem('cafeUserId', data.user._id)
                 localStorage.setItem('cafeToken', data.token)
                 // Force a reload to re-init UserContext cleanly
-                window.location.href = '/admin/menu'
+                window.location.href = '/'
                 return
             }
 
-            if (user?.isAdmin && from === '/') {
-                navigate('/admin/menu')
-            } else {
-                navigate(from, { replace: true })
-            }
+            navigate(from, { replace: true })
         } catch (err) {
             setError(err.response?.data?.message || (
                 mode === MODES.LOGIN ? 'Login failed. Check your credentials.' :
